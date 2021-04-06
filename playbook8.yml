@@ -1,0 +1,19 @@
+
+
+---
+- name: creating a file f1 if f1 folder is not present
+  hosts: all
+  tasks: 
+   - name: capturing f1 information
+     stat:
+      path: /home/ubuntu/f1
+     register: a
+   - name: display the captured information
+     debug: 
+       var: a
+   - name: creating f1
+     file:
+      name: f1
+      state: touch
+     when: a.stat.exists == false    
+...       

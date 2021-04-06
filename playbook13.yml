@@ -1,0 +1,16 @@
+---
+- name: creating user if he didnt exist
+  hosts: all
+  tasks: 
+   - block:
+      - name: checking the /etc/passwd output
+        shell: cut -d ":" -f 1 /etc/passwd | grep "{{a}}"
+        register: result
+     rescue:
+      - name: create user
+        user:
+         name: sai
+         password: sai
+...          
+     
+     

@@ -1,0 +1,27 @@
+
+
+---
+- name: creating tags
+  hosts: all
+  tasks:
+   - name: creating users
+     user:
+      name: "{{item.a}}"
+      password: "{{item.b}}"
+     with_items:
+      - {a: purv,b: purv}
+      - {a: arnv,b: arnv}
+     tags: creating_users
+   - name: software installation
+     apt:
+      name: git
+      state: present
+      update_cache: no
+   - name: copy /etc/passwd
+     copy:
+      src: /etc/passwd
+      dest: /tmp
+     tags: copy_etc
+...     
+
+

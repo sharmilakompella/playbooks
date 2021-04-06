@@ -1,0 +1,14 @@
+
+
+
+---
+- name: Install/uninstall of sw
+  hosts: all
+  tasks:
+    - name: Install sw
+      apt: 
+         name:         "{{a}}"
+         state:        "{{b}}"
+         update_cache: "{{c}}"
+...
+

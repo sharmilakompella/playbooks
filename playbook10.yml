@@ -1,0 +1,27 @@
+---
+- name: Implementing handlers
+  hosts: all
+  tasks:
+   - name: installing apache2
+     apt:
+      name: apache2
+      state: present
+     notify: check URL response
+   - name: replace the content of xml file
+     copy:
+      content: "welcome"
+      dest: /var/www/html/index.html
+     notify: Restart Apache2
+  handlers:
+   - name: Restart Apache2
+     service:
+      name: apache2
+      state: restarted
+   - name: check URL response
+     uri:
+      url: "{{item}}"
+      status_code: 200
+     with_items:
+      - http://172.31.50.95
+      - http://172.31.59.247
+...       

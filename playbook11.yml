@@ -1,0 +1,63 @@
+---
+- name: Installing required softwares on all nodes
+  hosts: all
+  tasks:
+   - name: Installing java, maven and git on all nodes 
+     apt:
+      name: "{{item.a}}"
+      state: present
+      update_cache: "{{item.c}}"
+     with_items:
+      - {a: openjdk-8-jdk,c: yes}
+      - {a: maven,c: no}
+      - {a: git,c: no} 
+      - {a: tomcat9,c: no}
+      - {a: tomcat9-admin,c: no}  
+- name: continuous download and build on dev server
+  hosts: devserver
+  tasks:
+   - name: Downloading from GitHUB
+     git:
+      repo: 'https://github.com/intelliqittrainings/maven.git'
+      dest: /tmp/mygit
+   - name: building artifacts
+     shell: cd /tmp/mygit;mvn package      
+   - name: fetching artifacts from dev server to controller
+     fetch:
+      src: /tmp/mygit/webapp/target/webapp.war
+      dest: /tmp/ 
+- name: deployment to QAserver
+  hosts: qaserver
+  tasks:
+   - name: copying from controller to qa server
+     copy:
+      src: /tmp/172.31.50.95/tmp/mygit/webapp/target/webapp.war
+      dest: /var/lib/tomcat9/webapps/testapp.war     
+   - name: downloading testing scripts from GIT
+     git:
+      repo: 'https://github.com/intelliqittrainings/FunctionalTesting.git'
+      dest: /tmp/test-git              
+   - name: execute selenium scripts
+     shell: java -jar /tmp/test-git/testing.jar 
+- name: continuous delivery
+  hosts: prodserver
+  tasks:
+   - name: deploy artifacts to prod server
+     copy:
+      src: /tmp/172.31.50.95/tmp/mygit/webapp/target/webapp.war
+      dest: /var/lib/tomcat9/webapps/prodapp.war
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

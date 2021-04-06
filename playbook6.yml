@@ -1,0 +1,21 @@
+---
+- name: Creating multiple users
+  hosts: all
+  tasks:
+   - name: creating users
+     user:
+      name: "{{item.a}}"
+      password: "{{item.b}}"
+      home: "{{item.c}}"
+     with_items:
+      - {a: purvi,b: purvi,c: /home/purvi}
+      - {a: arnav,b: arnav,c: /home/arnav}  
+   - name: copying files
+     copy:
+      src: "{{item.a}}"
+      dest: "{{item.b}}"
+     with_items:
+      - {a: /etc/passwd,b: /home/purvi}
+      - {a: /etc/group,b: /home/arnav}
+...
+

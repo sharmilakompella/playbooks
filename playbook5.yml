@@ -1,0 +1,16 @@
+
+
+---
+- name: Installing Jenkins and tomcat9
+  hosts: 172.31.51.20
+  tasks:
+   - name: Installing Jenkins and required softwares
+     apt:
+      name: "{{item.a}}"
+      state: present
+      update_cache: "{{item.b}}"
+     with_items:
+      - {a: openjdk-8-jdk,b: yes}
+      - {a: git,b: no}
+      - {a: maven,b: no}
+...        
